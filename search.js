@@ -1,5 +1,5 @@
 let userInput = document.querySelector("#searchBar");
-let autoFill = document.querySelector("search-container");
+let autoFill = document.querySelector(".list");
 const fruits = [
   "Apple",
   "Apricot",
@@ -82,14 +82,26 @@ const fruits = [
   "Yuzu",
 ];
 
-function search() {
-  userInput.addEventListener("keyup", (e) => {
-    let result = [];
-    let input = autoFill.value;
+function search(str) {
+  userInput.onKeyPress = function () {
+    let results = [];
+    let input = userInput.value;
     if (input.length) {
-      result = fruit.filter((fruit) => {
-        fruit.toLowerCase().includes(input.toLowerCase());
+      results = fruits.filter((fruit) => {
+        return fruit.toLowerCase().includes(input.toLowerCase());
       });
     }
-  });
+    displayFruits(results);
+  };
 }
+
+function displayFruits(results) {
+  const listItem = results.map((list) => {
+    return "<li onclick=selectInput(this)>" + list + "</li>";
+  });
+  autoFill.innerHTML = "<ul>" + listItem.join("") + "</ul>";
+}
+
+function selectInput(list) {
+  input.value = list.innerHTML;
+} // to add the what the user clicked into the search box

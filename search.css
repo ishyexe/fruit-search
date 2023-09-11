@@ -4,7 +4,7 @@ body {
   font-family: "Poppins", sans-serif;
   font-family: "Source Code Pro", monospace;
 }
-form {
+.search-container {
   margin: zero;
   padding-top: 245px;
   display: flex;

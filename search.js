@@ -1,6 +1,7 @@
-let userInput = document.querySelector("#searchBar");
-let autoFill = document.querySelector(".list");
-const fruits = [
+const input = document.querySelector("#fruit");
+const suggestionsList = document.querySelector(".suggestions ul");
+
+const fruit = [
   "Apple",
   "Apricot",
   "Avocado 🥑",
@@ -83,25 +84,46 @@ const fruits = [
 ];
 
 function search(str) {
-  userInput.onKeyPress = function () {
-    let results = [];
-    let input = userInput.value;
-    if (input.length) {
-      results = fruits.filter((fruit) => {
-        return fruit.toLowerCase().includes(input.toLowerCase());
-      });
+  let results = [];
+  let added = new Set();
+
+  fruit.forEach(function (val) {
+    const lowerCaseVal = val.toLowerCase();
+    if (lowerCaseVal.includes(str.toLowerCase()) && !added.has(lowerCaseVal)) {
+      results.push(val);
+      added.add(lowerCaseVal);
     }
-    displayFruits(results);
-  };
-}
-
-function displayFruits(results) {
-  const listItem = results.map((list) => {
-    return "<li onclick=selectInput(this)>" + list + "</li>";
   });
-  autoFill.innerHTML = "<ul>" + listItem.join("") + "</ul>";
+  return results;
 }
 
-function selectInput(list) {
-  input.value = list.innerHTML;
-} // to add the what the user clicked into the search box
+function searchHandler(e) {
+  const inputVal = e.target.value;
+  const results = search(inputVal);
+  showSuggestions(results, inputVal);
+}
+
+function showSuggestions(results, inputVal) {
+  suggestionsList.innerHTML = "";
+
+  results.forEach(function (result) {
+    const li = document.createElement("li");
+    li.classList.add("has-suggestions");
+    li.setAttribute("onclick", "useSuggestion(`" + result + "`)");
+
+    let bold = "<b>" + result.substr(0, inputVal.length) + "</b>";
+    let word = result.substr(inputVal.length);
+
+    li.innerHTML = bold + word;
+    suggestionsList.appendChild(li);
+  });
+}
+
+function useSuggestion(e) {
+  const chosenFruit = e.target.textContent;
+  input.value = chosenFruit;
+  suggestionsList.innerHTML = "";
+}
+
+input.addEventListener("input", searchHandler);
+suggestionsList.addEventListener("click", useSuggestion);

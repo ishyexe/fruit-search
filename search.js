@@ -84,46 +84,37 @@ const fruit = [
 ];
 
 function search(str) {
-  let results = [];
-  let added = new Set();
-
-  fruit.forEach(function (val) {
-    const lowerCaseVal = val.toLowerCase();
-    if (lowerCaseVal.includes(str.toLowerCase()) && !added.has(lowerCaseVal)) {
-      results.push(val);
-      added.add(lowerCaseVal);
-    }
-  });
-  return results;
-}
+  str = str.toLowerCase();
+  return fruit.filter((val) => val.toLowerCase().includes(str));
+} // i made the string filer through the fruit array to accept lower case fruit values/letters that the user includes
 
 function searchHandler(e) {
   const inputVal = e.target.value;
   const results = search(inputVal);
   showSuggestions(results, inputVal);
-}
+} // the results will show what's in the inputVal (what the user put into the search bar)
 
 function showSuggestions(results, inputVal) {
-  suggestionsList.innerHTML = "";
+  suggestionsList.innerText = ""; // this is so that the results are reset when this function is run (because the user didn't submit what they entered?)
 
   results.forEach(function (result) {
-    const li = document.createElement("li");
+    let li = document.createElement("li");
     li.classList.add("has-suggestions");
-    li.setAttribute("onclick", "useSuggestion(`" + result + "`)");
+    li.setAttribute("onclick", "useSuggestion(`" + result + "`)"); // ?
 
-    let bold = "<b>" + result.substr(0, inputVal.length) + "</b>";
-    let word = result.substr(inputVal.length);
+    let bold = "<b>" + result.substr(0, inputVal.length) + "</b>"; // ?
+    let word = result.substr(inputVal.length); // ?
 
     li.innerHTML = bold + word;
     suggestionsList.appendChild(li);
   });
-}
+} // each time a user enters a key that's included in the string this function should show the results for each value within an li element
 
 function useSuggestion(e) {
-  const chosenFruit = e.target.textContent;
+  const chosenFruit = e.target.textContent; // ?
   input.value = chosenFruit;
-  suggestionsList.innerHTML = "";
+  suggestionsList.innerText = "";
 }
 
-input.addEventListener("input", searchHandler);
-suggestionsList.addEventListener("click", useSuggestion);
+input.addEventListener("input", searchHandler); // event listener for when the user presses their key in the search bar
+suggestionsList.addEventListener("click", useSuggestion); // event listener for when the user clicks on the predicted suggestion so that it's diplayed in the search bar
